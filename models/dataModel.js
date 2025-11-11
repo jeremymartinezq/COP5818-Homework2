@@ -1,6 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+/**
+ * CityData Model
+ * 
+ * Represents demographic data for a city
+ * Uses Sequelize ORM with SQLite database
+ */
 const CityData = sequelize.define('CityData', {
   id: {
     type: DataTypes.INTEGER,
@@ -9,7 +15,10 @@ const CityData = sequelize.define('CityData', {
   },
   city: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   population: {
     type: DataTypes.INTEGER,
