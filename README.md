@@ -6,12 +6,12 @@ This project builds a backend system to serve and analyze city demographic data 
 
 ## Author
 
-**Jeremy**  
-**UCFID:** [Your UCFID]
+**Jeremy Martinez**  
+**UCFID:** 3487500
 
 ## GitHub Repository
 
-[Link to your GitHub repository - Add after creating repo]
+https://github.com/jeremymartinezq/COP5818-Homework2
 
 ## Setup Instructions
 
