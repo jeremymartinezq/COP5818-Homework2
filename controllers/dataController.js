@@ -1,10 +1,10 @@
 const CityData = require('../models/dataModel');
+const { Op } = require('sequelize');
 
 // CRUD operations
 exports.createEntry = async (req, res) => {
   try {
-    const entry = new CityData(req.body);
-    await entry.save();
+    const entry = await CityData.create(req.body);
     res.status(201).json(entry);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -13,7 +13,7 @@ exports.createEntry = async (req, res) => {
 
 exports.getAllEntries = async (req, res) => {
   try {
-    const entries = await CityData.find();
+    const entries = await CityData.findAll();
     res.json(entries);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -22,7 +22,7 @@ exports.getAllEntries = async (req, res) => {
 
 exports.getEntryById = async (req, res) => {
   try {
-    const entry = await CityData.findById(req.params.id);
+    const entry = await CityData.findByPk(req.params.id);
     if (!entry) {
       return res.status(404).json({ message: 'Entry not found' });
     }
@@ -34,11 +34,12 @@ exports.getEntryById = async (req, res) => {
 
 exports.updateEntry = async (req, res) => {
   try {
-    const updated = await CityData.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) {
+    const entry = await CityData.findByPk(req.params.id);
+    if (!entry) {
       return res.status(404).json({ message: 'Entry not found' });
     }
-    res.json(updated);
+    await entry.update(req.body);
+    res.json(entry);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -46,7 +47,10 @@ exports.updateEntry = async (req, res) => {
 
 exports.deleteEntry = async (req, res) => {
   try {
-    await CityData.findByIdAndDelete(req.params.id);
+    const entry = await CityData.findByPk(req.params.id);
+    if (entry) {
+      await entry.destroy();
+    }
     res.json({ message: 'Entry deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -56,7 +60,9 @@ exports.deleteEntry = async (req, res) => {
 // Question endpoints
 exports.getFastestGrowingCity = async (req, res) => {
   try {
-    const city = await CityData.findOne().sort({ growthRate: -1 });
+    const city = await CityData.findOne({
+      order: [['growthRate', 'DESC']]
+    });
     res.json({
       question: 'What is the fastest growing city?',
       answer: city.city
@@ -68,11 +74,14 @@ exports.getFastestGrowingCity = async (req, res) => {
 
 exports.getAverageAge = async (req, res) => {
   try {
-    const entries = await CityData.find();
-    const avgAge = entries.reduce((sum, entry) => sum + entry.averageAge, 0) / entries.length;
+    const sequelize = require('../config/database');
+    const result = await CityData.findOne({
+      attributes: [[sequelize.fn('AVG', sequelize.col('averageAge')), 'avgAge']],
+      raw: true
+    });
     res.json({
       question: 'What is the average age across all cities?',
-      answer: avgAge.toFixed(2)
+      answer: parseFloat(result.avgAge).toFixed(2)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -81,7 +90,9 @@ exports.getAverageAge = async (req, res) => {
 
 exports.getMostPopulousCity = async (req, res) => {
   try {
-    const city = await CityData.findOne().sort({ population: -1 });
+    const city = await CityData.findOne({
+      order: [['population', 'DESC']]
+    });
     res.json({
       question: 'What is the most populous city?',
       answer: city.city,
@@ -94,7 +105,9 @@ exports.getMostPopulousCity = async (req, res) => {
 
 exports.getHighestDensityCity = async (req, res) => {
   try {
-    const city = await CityData.findOne().sort({ density: -1 });
+    const city = await CityData.findOne({
+      order: [['density', 'DESC']]
+    });
     res.json({
       question: 'Which city has the highest population density?',
       answer: city.city,
@@ -107,11 +120,14 @@ exports.getHighestDensityCity = async (req, res) => {
 
 exports.getTotalPopulation = async (req, res) => {
   try {
-    const entries = await CityData.find();
-    const totalPop = entries.reduce((sum, entry) => sum + entry.population, 0);
+    const sequelize = require('../config/database');
+    const result = await CityData.findOne({
+      attributes: [[sequelize.fn('SUM', sequelize.col('population')), 'totalPop']],
+      raw: true
+    });
     res.json({
       question: 'What is the total population across all cities?',
-      answer: totalPop
+      answer: parseInt(result.totalPop)
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -120,7 +136,9 @@ exports.getTotalPopulation = async (req, res) => {
 
 exports.getYoungestCity = async (req, res) => {
   try {
-    const city = await CityData.findOne().sort({ averageAge: 1 });
+    const city = await CityData.findOne({
+      order: [['averageAge', 'ASC']]
+    });
     res.json({
       question: 'Which city has the youngest average age?',
       answer: city.city,
@@ -133,9 +151,19 @@ exports.getYoungestCity = async (req, res) => {
 
 exports.getCitiesAboveAverageGrowth = async (req, res) => {
   try {
-    const entries = await CityData.find();
-    const avgGrowth = entries.reduce((sum, entry) => sum + entry.growthRate, 0) / entries.length;
-    const citiesAboveAvg = entries.filter(entry => entry.growthRate > avgGrowth);
+    const sequelize = require('../config/database');
+    const avgResult = await CityData.findOne({
+      attributes: [[sequelize.fn('AVG', sequelize.col('growthRate')), 'avgGrowth']],
+      raw: true
+    });
+    const avgGrowth = parseFloat(avgResult.avgGrowth);
+    
+    const citiesAboveAvg = await CityData.findAll({
+      where: {
+        growthRate: { [Op.gt]: avgGrowth }
+      }
+    });
+    
     res.json({
       question: 'How many cities have growth rates above the average?',
       answer: citiesAboveAvg.length,
@@ -149,7 +177,9 @@ exports.getCitiesAboveAverageGrowth = async (req, res) => {
 
 exports.getLeastDenseCity = async (req, res) => {
   try {
-    const city = await CityData.findOne().sort({ density: 1 });
+    const city = await CityData.findOne({
+      order: [['density', 'ASC']]
+    });
     res.json({
       question: 'Which city has the lowest population density?',
       answer: city.city,
@@ -159,4 +189,3 @@ exports.getLeastDenseCity = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-

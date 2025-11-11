@@ -1,28 +1,30 @@
-const mongoose = require('mongoose');
+const sequelize = require('../config/database');
 const CityData = require('../models/dataModel');
 const sampleData = require('../sampleData.json');
 require('dotenv').config();
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/hw2db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(async () => {
-    console.log('MongoDB connected');
+// Seed the database
+async function seedDatabase() {
+  try {
+    // Connect to PostgreSQL
+    await sequelize.authenticate();
+    console.log('PostgreSQL connected');
     
-    // Clear existing data
-    await CityData.deleteMany({});
-    console.log('Cleared existing data');
+    // Sync database (create tables if they don't exist)
+    await sequelize.sync({ force: true });
+    console.log('Database synced and cleared');
     
     // Insert sample data
-    await CityData.insertMany(sampleData);
+    await CityData.bulkCreate(sampleData);
     console.log('Sample data inserted successfully');
+    console.log(`Inserted ${sampleData.length} cities`);
     
-    mongoose.connection.close();
-  })
-  .catch(err => {
+    await sequelize.close();
+    process.exit(0);
+  } catch (err) {
     console.error('Error:', err);
     process.exit(1);
-  });
+  }
+}
 
+seedDatabase();

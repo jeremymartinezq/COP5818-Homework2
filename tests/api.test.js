@@ -1,20 +1,17 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
+const sequelize = require('../config/database');
 const app = require('../app');
 const CityData = require('../models/dataModel');
 
 beforeAll(async () => {
-  // Connect to test database
-  await mongoose.connect('mongodb://localhost:27017/hw2db_test', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  // SQLite test database
+  await sequelize.sync({ force: true });
 });
 
 afterAll(async () => {
   // Clean up and close connection
-  await CityData.deleteMany({});
-  await mongoose.connection.close();
+  await CityData.destroy({ where: {}, truncate: true });
+  await sequelize.close();
 });
 
 describe('CRUD Operations', () => {
@@ -33,7 +30,7 @@ describe('CRUD Operations', () => {
     
     expect(response.status).toBe(201);
     expect(response.body.city).toBe('Test City');
-    createdId = response.body._id;
+    createdId = response.body.id;
   });
 
   test('GET /api/data - should get all entries', async () => {
@@ -67,7 +64,7 @@ describe('CRUD Operations', () => {
 describe('Question Endpoints', () => {
   beforeAll(async () => {
     // Insert test data
-    await CityData.create([
+    await CityData.bulkCreate([
       { city: 'City A', population: 100000, growthRate: 2.5, density: 1200, averageAge: 30 },
       { city: 'City B', population: 200000, growthRate: 3.8, density: 1500, averageAge: 35 },
       { city: 'City C', population: 150000, growthRate: 1.2, density: 1000, averageAge: 40 }
@@ -131,4 +128,3 @@ describe('Question Endpoints', () => {
     expect(response.body.answer).toBe('City C');
   });
 });
-
