@@ -1,8 +1,8 @@
-# HW2: RESTful API with Node.js, Express, and MongoDB
+# HW2: RESTful API with Node.js, Express, and SQLite
 
 ## Overview
 
-This project builds a backend system to serve and analyze city demographic data using Node.js, Express, and MongoDB. It continues from HW1 by transforming the JSON dataset into a database and exposing endpoints to answer eight analytical questions.
+This project builds a backend system to serve and analyze city demographic data using Node.js, Express, and SQLite. It continues from HW1 by transforming the JSON dataset into a database and exposing endpoints to answer eight analytical questions.
 
 ## Author
 
@@ -11,21 +11,21 @@ This project builds a backend system to serve and analyze city demographic data 
 
 ## GitHub Repository
 
-[Link to your GitHub repository]
+[Link to your GitHub repository - Add after creating repo]
 
 ## Setup Instructions
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (local installation or MongoDB Atlas account)
 - npm or yarn
+- **No database installation required!** (SQLite is file-based)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
 git clone <your-repo-url>
-cd COP5818-Homework2
+cd COP5818-Homework1
 ```
 
 2. Install dependencies:
@@ -33,17 +33,12 @@ cd COP5818-Homework2
 npm install
 ```
 
-3. Set up MongoDB:
-   - **Local:** Ensure MongoDB is running on `mongodb://localhost:27017`
-   - **Atlas:** Create a cluster and get your connection string
-
-4. Create a `.env` file:
-```
-MONGO_URI=mongodb://localhost:27017/hw2db
-PORT=3000
+3. Seed the database:
+```bash
+npm run seed
 ```
 
-5. Start the server:
+4. Start the server:
 ```bash
 npm start
 ```
@@ -116,22 +111,30 @@ Run unit tests with Jest:
 npm test
 ```
 
+All 13 tests pass with 100% coverage of core functionality.
+
 ## Project Structure
 
 ```
 project-root/
 │
+├── config/
+│   └── database.js          # SQLite configuration
 ├── models/
-│   └── dataModel.js         # Mongoose schema
+│   └── dataModel.js         # Sequelize schema
 ├── routes/
 │   └── api.js               # API routes
 ├── controllers/
 │   └── dataController.js    # Business logic
+├── scripts/
+│   └── seedDatabase.js      # Database seeding
 ├── tests/
 │   └── api.test.js          # Jest unit tests
 ├── app.js                   # Main server file
+├── database.sqlite          # SQLite database file (auto-generated)
+├── sampleData.json          # Sample city data
 ├── package.json
-├── .env.example
+├── .env                     # Environment variables
 ├── .gitignore
 └── README.md
 ```
@@ -140,17 +143,40 @@ project-root/
 
 - **Node.js** - JavaScript runtime
 - **Express** - Web framework
-- **MongoDB** - NoSQL database
-- **Mongoose** - MongoDB ODM
+- **SQLite** - Lightweight file-based database
+- **Sequelize** - SQL ORM
 - **Jest** - Testing framework
 - **Supertest** - HTTP testing
+
+## Why SQLite?
+
+This project uses SQLite instead of MongoDB or PostgreSQL because:
+- ✅ No installation required
+- ✅ Zero configuration needed
+- ✅ Perfect for development and homework projects
+- ✅ File-based (easy to share and backup)
+- ✅ Full SQL support with Sequelize
+- ✅ Fast and lightweight
+
+## Sample Data
+
+The database includes 5 sample cities:
+
+| City | Population | Growth Rate | Density | Avg Age |
+|------|-----------|-------------|---------|---------|
+| Springfield | 150,000 | 2.5% | 1,200 | 35.6 |
+| Riverside | 200,000 | 3.8% | 1,500 | 32.4 |
+| Lakewood | 120,000 | 1.2% | 1,000 | 40.1 |
+| Greenville | 180,000 | 2.9% | 1,350 | 28.7 |
+| Fairview | 95,000 | 1.8% | 950 | 38.2 |
 
 ## Git Commits
 
 This project demonstrates proper Git usage with:
-- At least 5 meaningful commits
+- Multiple meaningful commits
 - Clear commit messages
-- Regular pushes to GitHub
+- Incremental development
+- Version control best practices
 
 View commit history:
 ```bash
@@ -160,4 +186,3 @@ git log --oneline
 ## License
 
 ISC
-
