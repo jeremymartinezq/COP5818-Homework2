@@ -2,7 +2,7 @@
 
 **Student:** Jeremy Martinez  
 **UCFID:** 3487500  
-**Course:** COP5818 - Advanced Web Development  
+**Course:** COP5818 - Full Stack Development for FinTech  
 **Assignment:** Homework 2 - RESTful API with Database Integration  
 **Date Completed:** November 11, 2025  
 **GitHub Repository:** https://github.com/jeremymartinezq/COP5818-Homework2
@@ -587,8 +587,6 @@ NODE_ENV=development|production|test   # Environment mode
 ---
 
 **Project Status:** ✅ COMPLETE  
-**Grade Expected:** A+  
-**Time Invested:** ~6-8 hours  
 **Learning Outcome:** Excellent understanding of RESTful APIs, databases, and testing
 
 ---
