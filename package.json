@@ -14,7 +14,7 @@
     "coveragePathIgnorePatterns": ["/node_modules/"]
   },
   "keywords": ["nodejs", "express", "mongodb", "rest-api"],
-  "author": "Your Name - YourUCFID",
+  "author": "Jeremy - [Your UCFID]",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
