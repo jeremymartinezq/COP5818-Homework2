@@ -8,6 +8,14 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
+// Request logging middleware (development only)
+if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
+  app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+  });
+}
+
 // Test database connection and sync models
 sequelize.authenticate()
   .then(() => {
