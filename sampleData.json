@@ -1,0 +1,38 @@
+[
+  {
+    "city": "Springfield",
+    "population": 150000,
+    "growthRate": 2.5,
+    "density": 1200,
+    "averageAge": 35.6
+  },
+  {
+    "city": "Riverside",
+    "population": 200000,
+    "growthRate": 3.8,
+    "density": 1500,
+    "averageAge": 32.4
+  },
+  {
+    "city": "Lakewood",
+    "population": 120000,
+    "growthRate": 1.2,
+    "density": 1000,
+    "averageAge": 40.1
+  },
+  {
+    "city": "Greenville",
+    "population": 180000,
+    "growthRate": 2.9,
+    "density": 1350,
+    "averageAge": 28.7
+  },
+  {
+    "city": "Fairview",
+    "population": 95000,
+    "growthRate": 1.8,
+    "density": 950,
+    "averageAge": 38.2
+  }
+]
+

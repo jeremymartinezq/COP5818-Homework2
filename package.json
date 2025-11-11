@@ -1,0 +1,30 @@
+{
+  "name": "cop5818-homework2",
+  "version": "1.0.0",
+  "description": "RESTful API with Node.js, Express, and MongoDB",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest --coverage",
+    "seed": "node scripts/seedDatabase.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": ["/node_modules/"]
+  },
+  "keywords": ["nodejs", "express", "mongodb", "rest-api"],
+  "author": "Your Name - YourUCFID",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3",
+    "nodemon": "^2.0.22"
+  }
+}
+
