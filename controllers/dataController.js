@@ -1,7 +1,19 @@
 const CityData = require('../models/dataModel');
 const { Op } = require('sequelize');
 
+/**
+ * City Data Controller
+ * 
+ * Handles all CRUD operations and analytical questions for city demographic data
+ * Uses Sequelize ORM with SQLite database
+ */
+
 // CRUD operations
+
+/**
+ * Create a new city entry
+ * POST /api/data
+ */
 exports.createEntry = async (req, res) => {
   try {
     const entry = await CityData.create(req.body);
