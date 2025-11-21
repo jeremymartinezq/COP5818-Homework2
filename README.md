@@ -7,7 +7,6 @@ This project builds a backend system to serve and analyze city demographic data 
 ## Author
 
 **Jeremy Martinez**  
-**UCFID:** 3487500
 
 ## GitHub Repository
 
